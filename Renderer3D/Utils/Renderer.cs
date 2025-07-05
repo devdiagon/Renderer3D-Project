@@ -12,8 +12,7 @@ namespace Renderer3D
         public bool IsPaused { get; set; } = false;
 
         private Figure3D model;
-        private float angleX = 0;
-        private float angleY = 0;
+        private Matrix3x3 rotationMatrix = Matrix3x3.Identity();
         private float scale = 1.0f;
         private bool scalingUp = true;
         private readonly int canvasWidth, canvasHeight;
@@ -46,7 +45,7 @@ namespace Renderer3D
 
         public void Reset()
         {
-            angleX = angleY = 0;
+            rotationMatrix = Matrix3x3.Identity();
             scale = 1.0f;
             model.Reset();
         }
@@ -55,8 +54,14 @@ namespace Renderer3D
         {
             if (IsPaused) return;
 
-            angleY += 0.03f;
-            if (angleY > 2 * Math.PI) angleY -= (float)(2 * Math.PI);
+            Matrix3x3 autoRotation = Matrix3x3.RotationY(0.02f);
+            rotationMatrix = autoRotation * rotationMatrix;
+
+            autoRotation = Matrix3x3.RotationX(0.02f);
+            rotationMatrix = autoRotation * rotationMatrix;
+
+            autoRotation = Matrix3x3.RotationZ(0.02f);
+            rotationMatrix = autoRotation * rotationMatrix;
 
             if (scalingUp) 
             { 
@@ -73,7 +78,11 @@ namespace Renderer3D
         public void Render(Graphics g)
         {
             g.Clear(Color.Black);
-            var transformed = Transformations.ApplyTransformations(model.Vertices, angleX, angleY, scale, model.Position);
+
+            List<Point3D> transformed = model.Vertices
+                        .Select(v => rotationMatrix.Transform(v * scale) + model.Position)
+                        .ToList();
+
             var projected = Transformations.Project(transformed, canvasWidth, canvasHeight);
 
             using (Pen pen = new Pen(Color.Cyan, 2))
@@ -103,29 +112,26 @@ namespace Renderer3D
 
             float infinity = 1000f;
 
-            Point3D localDir;
+            Point3D dir;
             Color axisColor;
 
             switch (activeAxis)
             {
-                case Axis.X: localDir = new Point3D(1, 0, 0); axisColor = Color.Red; break;
-                case Axis.Y: localDir = new Point3D(0, 1, 0); axisColor = Color.Blue; break;
-                case Axis.Z: localDir = new Point3D(0, 0, 1); axisColor = Color.Green; break;
+                case Axis.X: dir = new Point3D(1, 0, 0); axisColor = Color.Red; break;
+                case Axis.Y: dir = new Point3D(0, 1, 0); axisColor = Color.Blue; break;
+                case Axis.Z: dir = new Point3D(0, 0, 1); axisColor = Color.Green; break;
                 default: return;
             }
 
-            var transformedVertices = Transformations.ApplyTransformations(model.Vertices, angleX, angleY, scale, model.Position);
-            Point3D center = transformedVertices.Aggregate(new Point3D(0, 0, 0), (acc, p) => acc + p) * (1f / transformedVertices.Count);
+            Point3D centerLocal = model.Vertices.Aggregate(new Point3D(0, 0, 0), (acc, p) => acc + p) * (1f / model.Vertices.Count);
+            Point3D centerWorld = rotationMatrix.Transform(centerLocal * scale) + model.Position;
+            
+            Point3D localDir = rotationMatrix.Transform(dir);
+            Point3D p1 = centerWorld - localDir * infinity;
+            Point3D p2 = centerWorld + localDir * infinity;
 
-            Point3D p1 = localDir * -infinity;
-            Point3D p2 = localDir * infinity;
-
-            p1 += center;
-            p2 += center;
-
-            var transformed = Transformations.ApplyTransformations(new List<Point3D> { p1, p2 }, angleX, angleY, scale, model.Position);
-
-            var projected = Transformations.Project(transformed, canvasWidth, canvasHeight);
+            
+            var projected = Transformations.Project(new List<Point3D> { p1, p2 }, canvasWidth, canvasHeight);
 
             using (Pen axisPen = new Pen(axisColor, 2))
             {
@@ -135,36 +141,38 @@ namespace Renderer3D
 
         private void DrawLocalAxes(Graphics g)
         {
-            if (model == null) return;
+            if (!showLocalAxes || model == null) return;
 
             float axisLength = 1.5f;
 
-            // Direcciones locales unitarias
-            Point3D xDir = new Point3D(axisLength, 0, 0);
-            Point3D yDir = new Point3D(0, axisLength, 0);
-            Point3D zDir = new Point3D(0, 0, axisLength);
+            Point3D origin = model.Position;
 
-            // Obtener vértices transformados del modelo
-            var transformedVertices = Transformations.ApplyTransformations(model.Vertices, angleX, angleY, scale, model.Position);
-            Point3D center = transformedVertices.Aggregate(new Point3D(0, 0, 0), (acc, p) => acc + p) * (1f / transformedVertices.Count);
+            // Rota los ejes base (locales)
+            Point3D xAxis = rotationMatrix.Transform(new Point3D(axisLength, 0, 0));
+            Point3D yAxis = rotationMatrix.Transform(new Point3D(0, axisLength, 0));
+            Point3D zAxis = rotationMatrix.Transform(new Point3D(0, 0, axisLength));
 
-            // Transformar direcciones locales
-            Point3D xEnd = center + Transformations.ApplyRotationAndScale(xDir, angleX, angleY, scale);
-            Point3D yEnd = center + Transformations.ApplyRotationAndScale(yDir, angleX, angleY, scale);
-            Point3D zEnd = center + Transformations.ApplyRotationAndScale(zDir, angleX, angleY, scale);
+            // Convertir al sistema de coordenadas de pantalla
+            List<Point3D> axisPoints = new List<Point3D>
+            {
+                origin,
+                origin + xAxis,
+                origin + yAxis,
+                origin + zAxis
+            };
 
-            var projected = Transformations.Project(new List<Point3D> { center, xEnd, yEnd, zEnd }, canvasWidth, canvasHeight);
+            var projected = Transformations.Project(axisPoints, canvasWidth, canvasHeight);
 
             Pen penX = new Pen(Color.Red, 2);
             Pen penY = new Pen(Color.Blue, 2);
             Pen penZ = new Pen(Color.Green, 2);
 
-            g.DrawLine(penX, projected[0], projected[1]); // X
-            g.DrawLine(penY, projected[0], projected[2]); // Y
-            g.DrawLine(penZ, projected[0], projected[3]); // Z
+            g.DrawLine(penX, projected[0], projected[1]);
+            g.DrawLine(penY, projected[0], projected[2]);
+            g.DrawLine(penZ, projected[0], projected[3]);
         }
 
-        // Acciones de interacción (solo válidas si IsPaused)
+        // Acciones de interacción
         private float Clamp(float value, float min, float max)
         {
             if (value < min) return min;
@@ -179,35 +187,34 @@ namespace Renderer3D
 
         public void Move(float dx, float dy, float dz)
         {
-            if(model == null) return;
+            if (model == null) return;
 
-            //Descomentar si se quiere tener un movimiento de forma local
-            // desde el punto de vista de la figura
-            Point3D localMovement = new Point3D(dx, dy, dz);
-
-            Point3D rotatedMovement = Transformations.ApplyRotation(localMovement, angleX, angleY);
-
-            model.Position += rotatedMovement;
+            var direction = rotationMatrix.Transform(new Point3D(dx, dy, dz));
+            model.Position += direction;
 
             if (dx != 0) activeAxis = Axis.X;
             else if (dy != 0) activeAxis = Axis.Y;
             else if (dz != 0) activeAxis = Axis.Z;
 
             axisStartTime = DateTime.Now;
-
-            //Descomentar si se quiere mantener el movimiento en X Y Z
-            // desde el punto de vista del usuario, mas no de forma local desde la figura.
-            //if (!IsPaused) return;
-            //model.Position.X += dx;
-            //model.Position.Y += dy;
-            //model.Position.Z += dz;
         }
 
-        public void Rotate(float dAngleX, float dAngleY)
+        public void RotateX(float delta)
         {
-            if (!IsPaused) return;
-            angleX += dAngleX;
-            angleY += dAngleY;
+            Matrix3x3 rotX = Matrix3x3.RotationX(delta);
+            rotationMatrix = rotationMatrix * rotX;
+        }
+
+        public void RotateY(float delta)
+        {
+            Matrix3x3 rotY = Matrix3x3.RotationY(delta);
+            rotationMatrix = rotationMatrix * rotY;
+        }
+
+        public void RotateZ(float delta)
+        {
+            Matrix3x3 rotZ = Matrix3x3.RotationZ(delta);
+            rotationMatrix =  rotationMatrix * rotZ;
         }
     }
 }
