@@ -39,6 +39,7 @@
             this.btnPause = new System.Windows.Forms.Button();
             this.picCanvas = new System.Windows.Forms.PictureBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
+            this.btnGuizmos = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picCanvas)).BeginInit();
             this.SuspendLayout();
@@ -129,11 +130,22 @@
             this.picCanvas.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picCanvas_MouseMove);
             this.picCanvas.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.picCanvas_MouseWheel);
             // 
+            // btnGuizmos
+            // 
+            this.btnGuizmos.Location = new System.Drawing.Point(391, 42);
+            this.btnGuizmos.Name = "btnGuizmos";
+            this.btnGuizmos.Size = new System.Drawing.Size(92, 37);
+            this.btnGuizmos.TabIndex = 5;
+            this.btnGuizmos.Text = "Guizmos";
+            this.btnGuizmos.UseVisualStyleBackColor = true;
+            this.btnGuizmos.Click += new System.EventHandler(this.btnGuizmos_Click);
+            // 
             // FrmHome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 584);
+            this.Controls.Add(this.btnGuizmos);
             this.Controls.Add(this.picCanvas);
             this.Controls.Add(this.btnPause);
             this.Controls.Add(this.btnPlay);
@@ -165,5 +177,6 @@
         private System.Windows.Forms.ToolStripMenuItem cilindroToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem conoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem esferaToolStripMenuItem;
+        private System.Windows.Forms.Button btnGuizmos;
     }
 }

@@ -121,5 +121,11 @@ namespace Renderer3D
         {
             renderer.SetFigure(new Shapes.Sphere());;
         }
+
+        private void btnGuizmos_Click(object sender, EventArgs e)
+        {
+            renderer.ToggleLocalAxes();
+            picCanvas.Invalidate();
+        }
     }
 }

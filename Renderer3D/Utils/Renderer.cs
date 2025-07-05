@@ -24,6 +24,7 @@ namespace Renderer3D
         private DateTime axisStartTime;
         private readonly TimeSpan axisDisplayDuration = TimeSpan.FromMilliseconds(500);
 
+        private bool showLocalAxes = true;
         public Renderer(int width, int height)
         {
             canvasWidth = width;
@@ -36,6 +37,11 @@ namespace Renderer3D
         {
             model = figure;
             Reset();
+        }
+
+        public void ToggleLocalAxes()
+        {
+            showLocalAxes = !showLocalAxes;
         }
 
         public void Reset()
@@ -84,6 +90,11 @@ namespace Renderer3D
             {
                 DrawAxisIndicator(g);
             }
+
+            if (showLocalAxes)
+            {
+                DrawLocalAxes(g);
+            }
         }
 
         private void DrawAxisIndicator(Graphics g)
@@ -103,12 +114,16 @@ namespace Renderer3D
                 default: return;
             }
 
+            var transformedVertices = Transformations.ApplyTransformations(model.Vertices, angleX, angleY, scale, model.Position);
+            Point3D center = transformedVertices.Aggregate(new Point3D(0, 0, 0), (acc, p) => acc + p) * (1f / transformedVertices.Count);
+
             Point3D p1 = localDir * -infinity;
             Point3D p2 = localDir * infinity;
 
+            p1 += center;
+            p2 += center;
 
-            List<Point3D> axisLine = new List<Point3D> { p1, p2 };
-            var transformed = Transformations.ApplyTransformations(axisLine, angleX, angleY, scale, model.Position);
+            var transformed = Transformations.ApplyTransformations(new List<Point3D> { p1, p2 }, angleX, angleY, scale, model.Position);
 
             var projected = Transformations.Project(transformed, canvasWidth, canvasHeight);
 
@@ -116,6 +131,37 @@ namespace Renderer3D
             {
                 g.DrawLine(axisPen, projected[0], projected[1]);
             }
+        }
+
+        private void DrawLocalAxes(Graphics g)
+        {
+            if (model == null) return;
+
+            float axisLength = 1.5f;
+
+            // Direcciones locales unitarias
+            Point3D xDir = new Point3D(axisLength, 0, 0);
+            Point3D yDir = new Point3D(0, axisLength, 0);
+            Point3D zDir = new Point3D(0, 0, axisLength);
+
+            // Obtener vértices transformados del modelo
+            var transformedVertices = Transformations.ApplyTransformations(model.Vertices, angleX, angleY, scale, model.Position);
+            Point3D center = transformedVertices.Aggregate(new Point3D(0, 0, 0), (acc, p) => acc + p) * (1f / transformedVertices.Count);
+
+            // Transformar direcciones locales
+            Point3D xEnd = center + Transformations.ApplyRotationAndScale(xDir, angleX, angleY, scale);
+            Point3D yEnd = center + Transformations.ApplyRotationAndScale(yDir, angleX, angleY, scale);
+            Point3D zEnd = center + Transformations.ApplyRotationAndScale(zDir, angleX, angleY, scale);
+
+            var projected = Transformations.Project(new List<Point3D> { center, xEnd, yEnd, zEnd }, canvasWidth, canvasHeight);
+
+            Pen penX = new Pen(Color.Red, 2);
+            Pen penY = new Pen(Color.Blue, 2);
+            Pen penZ = new Pen(Color.Green, 2);
+
+            g.DrawLine(penX, projected[0], projected[1]); // X
+            g.DrawLine(penY, projected[0], projected[2]); // Y
+            g.DrawLine(penZ, projected[0], projected[3]); // Z
         }
 
         // Acciones de interacción (solo válidas si IsPaused)
