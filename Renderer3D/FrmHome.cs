@@ -14,6 +14,9 @@ namespace Renderer3D
     {
         private Renderer renderer;
         private Point lastMouse;
+        private Keys heldKey = Keys.None;
+        private bool isDragging = false;
+
         public FrmHome()
         {
             InitializeComponent();
@@ -74,7 +77,16 @@ namespace Renderer3D
                 case Keys.E: renderer.Move(0, 0, moveStep); break;
             }
 
+            if (e.KeyCode == Keys.C || e.KeyCode == Keys.V || e.KeyCode == Keys.B)
+                heldKey = e.KeyCode;
+
             picCanvas.Invalidate();
+        }
+
+        private void FrmHome_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == heldKey)
+                heldKey = Keys.None;
         }
 
         private void picCanvas_MouseWheel(object sender, MouseEventArgs e)
@@ -87,19 +99,39 @@ namespace Renderer3D
 
         private void picCanvas_MouseDown(object sender, MouseEventArgs e)
         {
-            lastMouse = e.Location;
+            if (renderer.IsPaused && e.Button == MouseButtons.Left &&
+        (radioX.Checked || radioY.Checked || radioZ.Checked))
+            {
+                isDragging = true;
+                lastMouse = e.Location;
+                picCanvas.Cursor = Cursors.SizeAll;
+            }
+        }
+
+        private void picCanvas_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+            picCanvas.Cursor = Cursors.Default;
         }
 
         private void picCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (renderer?.IsPaused == true && e.Button == MouseButtons.Left)
-            {
-                float dx = (e.X - lastMouse.X) * 0.01f;
-                float dy = (e.Y - lastMouse.Y) * 0.01f;
-                renderer.Rotate(dy, dx);
-                lastMouse = e.Location;
-                picCanvas.Invalidate();
-            }
+            if (!isDragging || !renderer.IsPaused) return;
+
+            int dx = e.X - lastMouse.X;
+            int dy = e.Y - lastMouse.Y;
+            lastMouse = e.Location;
+
+            float sensitivity = 0.01f;
+
+            if (radioX.Checked)
+                renderer.RotateX(dy * sensitivity);
+            else if (radioY.Checked)
+                renderer.RotateY(dx * sensitivity);
+            else if (radioZ.Checked)
+                renderer.RotateZ(dx * sensitivity);
+
+            picCanvas.Invalidate();
         }
 
         private void cuboToolStripMenuItem_Click(object sender, EventArgs e)
