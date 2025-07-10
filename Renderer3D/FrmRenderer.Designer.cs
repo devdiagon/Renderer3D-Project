@@ -303,7 +303,7 @@
             this.radioZ.Location = new System.Drawing.Point(535, 2);
             this.radioZ.Margin = new System.Windows.Forms.Padding(2);
             this.radioZ.Name = "radioZ";
-            this.radioZ.Size = new System.Drawing.Size(73, 21);
+            this.radioZ.Size = new System.Drawing.Size(84, 24);
             this.radioZ.TabIndex = 11;
             this.radioZ.TabStop = true;
             this.radioZ.Text = "Rotar Z";
@@ -318,7 +318,7 @@
             this.radioX.Location = new System.Drawing.Point(380, 2);
             this.radioX.Margin = new System.Windows.Forms.Padding(2);
             this.radioX.Name = "radioX";
-            this.radioX.Size = new System.Drawing.Size(73, 21);
+            this.radioX.Size = new System.Drawing.Size(86, 24);
             this.radioX.TabIndex = 9;
             this.radioX.TabStop = true;
             this.radioX.Text = "Rotar X";
@@ -333,7 +333,7 @@
             this.radioY.Location = new System.Drawing.Point(457, 2);
             this.radioY.Margin = new System.Windows.Forms.Padding(2);
             this.radioY.Name = "radioY";
-            this.radioY.Size = new System.Drawing.Size(73, 21);
+            this.radioY.Size = new System.Drawing.Size(85, 24);
             this.radioY.TabIndex = 10;
             this.radioY.TabStop = true;
             this.radioY.Text = "Rotar Y";
@@ -397,7 +397,7 @@
             // 
             // FrmRenderer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(934, 561);
@@ -405,6 +405,7 @@
             this.Controls.Add(this.panelPlayer);
             this.Controls.Add(this.panelSidebar);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimumSize = new System.Drawing.Size(950, 600);
             this.Name = "FrmRenderer";
