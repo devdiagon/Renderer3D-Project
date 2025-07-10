@@ -16,6 +16,12 @@ namespace Renderer3D
         private float scale = 1.0f;
         private bool scalingUp = true;
         private readonly int canvasWidth, canvasHeight;
+        private Color modelColor = Color.Cyan;
+
+        public void SetModelColor(Color color)
+        {
+            modelColor = color;
+        }
 
         private enum Axis { None, X, Y, Z }
 
@@ -77,7 +83,7 @@ namespace Renderer3D
 
         public void Render(Graphics g)
         {
-            g.Clear(Color.Black);
+            g.Clear(Color.FromArgb(32, 30, 45));
 
             List<Point3D> transformed = model.Vertices
                         .Select(v => rotationMatrix.Transform(v * scale) + model.Position)
@@ -85,7 +91,7 @@ namespace Renderer3D
 
             var projected = Transformations.Project(transformed, canvasWidth, canvasHeight);
 
-            using (Pen pen = new Pen(Color.Cyan, 2))
+            using (Pen pen = new Pen(modelColor, 2))
             {
                 for (int i = 0; i < model.Edges.GetLength(0); i++)
                 {

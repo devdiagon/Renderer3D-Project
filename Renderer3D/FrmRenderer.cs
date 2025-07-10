@@ -10,19 +10,18 @@ using System.Windows.Forms;
 
 namespace Renderer3D
 {
-    public partial class FrmHome : Form
+    public partial class FrmRenderer : Form
     {
         private Renderer renderer;
         private Point lastMouse;
         private Keys heldKey = Keys.None;
         private bool isDragging = false;
-
-        public FrmHome()
+        public FrmRenderer()
         {
             InitializeComponent();
+            CustomizeDesign();
         }
-
-        private void FrmHome_Load(object sender, EventArgs e)
+        private void FrmRenderer_Load(object sender, EventArgs e)
         {
             renderer = new Renderer(picCanvas.Width, picCanvas.Height);
 
@@ -39,14 +38,69 @@ namespace Renderer3D
                 renderer.Render(ev.Graphics);
             };
         }
+        #region Submenu
+        private void CustomizeDesign()
+        {
+            panelSubmenu.Visible = true;
+        }
+        private void HideSubmenu()
+        {
+            if (panelSubmenu.Visible == true)
+                panelSubmenu.Visible = false;
+        }
 
+        private void ShowSubmenu(Panel submenu)
+        {
+            if (submenu.Visible == false)
+            {
+                HideSubmenu();
+                submenu.Visible = true;
+            }
+            else
+            {
+                submenu.Visible = false;
+            }
+        }
+
+        private void btnFigures_Click(object sender, EventArgs e)
+        {
+            ShowSubmenu(panelSubmenu);
+        }
+
+        #endregion
+
+        #region Clicks
+        private void btnCubo_Click(object sender, EventArgs e)
+        {
+           renderer.SetFigure(new Shapes.Cube());
+        }
+
+        private void btnCilindro_Click(object sender, EventArgs e)
+        {
+            renderer.SetFigure(new Shapes.Cylinder());
+        }
+
+        private void btnCono_Click(object sender, EventArgs e)
+        {
+            renderer.SetFigure(new Shapes.Cone());
+        }
+
+        private void btnEsfera_Click(object sender, EventArgs e)
+        {
+            renderer.SetFigure(new Shapes.Sphere()); ;
+        }
+
+        private void btnLily_Click(object sender, EventArgs e)
+        {
+            renderer.SetFigure(new Shapes.Lily());
+        }
         private void btnReset_Click(object sender, EventArgs e)
         {
             if (renderer != null)
             {
                 renderer.Reset();
                 picCanvas.Invalidate();
-            }    
+            }
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -55,13 +109,22 @@ namespace Renderer3D
                 renderer.IsPaused = false;
         }
 
-        private void btnPause_Click(object sender, EventArgs e)
+        private void btnStop_Click(object sender, EventArgs e)
         {
             if (renderer != null)
                 renderer.IsPaused = true;
         }
 
-        private void FrmHome_KeyDown(object sender, KeyEventArgs e)
+        private void btnGuizmos_Click(object sender, EventArgs e)
+        {
+            renderer.ToggleLocalAxes();
+            picCanvas.Invalidate();
+        }
+
+        #endregion
+
+        #region Canvas
+        private void FrmRenderer_KeyDown(object sender, KeyEventArgs e)
         {
             if (!renderer.IsPaused) return;
 
@@ -83,35 +146,21 @@ namespace Renderer3D
             picCanvas.Invalidate();
         }
 
-        private void FrmHome_KeyUp(object sender, KeyEventArgs e)
+        private void FrmRenderer_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == heldKey)
                 heldKey = Keys.None;
         }
 
-        private void picCanvas_MouseWheel(object sender, MouseEventArgs e)
-        {
-            if (!renderer.IsPaused) return;
-            float delta = e.Delta > 0 ? 0.05f : -0.05f;
-            renderer.AdjustScale(delta);
-            picCanvas.Invalidate();
-        }
-
         private void picCanvas_MouseDown(object sender, MouseEventArgs e)
         {
             if (renderer.IsPaused && e.Button == MouseButtons.Left &&
-        (radioX.Checked || radioY.Checked || radioZ.Checked))
+                (radioX.Checked || radioY.Checked || radioZ.Checked))
             {
                 isDragging = true;
                 lastMouse = e.Location;
                 picCanvas.Cursor = Cursors.SizeAll;
             }
-        }
-
-        private void picCanvas_MouseUp(object sender, MouseEventArgs e)
-        {
-            isDragging = false;
-            picCanvas.Cursor = Cursors.Default;
         }
 
         private void picCanvas_MouseMove(object sender, MouseEventArgs e)
@@ -134,35 +183,28 @@ namespace Renderer3D
             picCanvas.Invalidate();
         }
 
-        private void cuboToolStripMenuItem_Click(object sender, EventArgs e)
+        private void picCanvas_MouseUp(object sender, MouseEventArgs e)
         {
-            renderer.SetFigure(new Shapes.Cube());
+            isDragging = false;
+            picCanvas.Cursor = Cursors.Default;
         }
 
-        private void cilindroToolStripMenuItem_Click(object sender, EventArgs e)
+        private void picCanvas_MouseWheel(object sender, MouseEventArgs e)
         {
-            renderer.SetFigure(new Shapes.Cylinder());
-        }
-
-        private void conoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            renderer.SetFigure(new Shapes.Cone());
-        }
-
-        private void esferaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            renderer.SetFigure(new Shapes.Sphere());;
-        }
-
-        private void btnGuizmos_Click(object sender, EventArgs e)
-        {
-            renderer.ToggleLocalAxes();
+            if (!renderer.IsPaused) return;
+            float delta = e.Delta > 0 ? 0.05f : -0.05f;
+            renderer.AdjustScale(delta);
             picCanvas.Invalidate();
         }
+        #endregion
 
-        private void lilyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnColor_Click(object sender, EventArgs e)
         {
-            renderer.SetFigure(new Shapes.Lily());
+            if(colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                renderer.SetModelColor(colorDialog1.Color);
+                picCanvas.Invalidate();
+            }
         }
     }
 }

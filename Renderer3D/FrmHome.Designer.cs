@@ -34,6 +34,7 @@
             this.cilindroToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.conoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.esferaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lilyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
             this.btnPause = new System.Windows.Forms.Button();
@@ -56,46 +57,56 @@
             this.cuboToolStripMenuItem,
             this.cilindroToolStripMenuItem,
             this.conoToolStripMenuItem,
-            this.esferaToolStripMenuItem});
+            this.esferaToolStripMenuItem,
+            this.lilyToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1067, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(802, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // cuboToolStripMenuItem
             // 
             this.cuboToolStripMenuItem.Name = "cuboToolStripMenuItem";
-            this.cuboToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.cuboToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.cuboToolStripMenuItem.Text = "Cubo";
             this.cuboToolStripMenuItem.Click += new System.EventHandler(this.cuboToolStripMenuItem_Click);
             // 
             // cilindroToolStripMenuItem
             // 
             this.cilindroToolStripMenuItem.Name = "cilindroToolStripMenuItem";
-            this.cilindroToolStripMenuItem.Size = new System.Drawing.Size(77, 26);
+            this.cilindroToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.cilindroToolStripMenuItem.Text = "Cilindro";
             this.cilindroToolStripMenuItem.Click += new System.EventHandler(this.cilindroToolStripMenuItem_Click);
             // 
             // conoToolStripMenuItem
             // 
             this.conoToolStripMenuItem.Name = "conoToolStripMenuItem";
-            this.conoToolStripMenuItem.Size = new System.Drawing.Size(59, 26);
+            this.conoToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.conoToolStripMenuItem.Text = "Cono";
             this.conoToolStripMenuItem.Click += new System.EventHandler(this.conoToolStripMenuItem_Click);
             // 
             // esferaToolStripMenuItem
             // 
             this.esferaToolStripMenuItem.Name = "esferaToolStripMenuItem";
-            this.esferaToolStripMenuItem.Size = new System.Drawing.Size(66, 26);
+            this.esferaToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
             this.esferaToolStripMenuItem.Text = "Esfera";
             this.esferaToolStripMenuItem.Click += new System.EventHandler(this.esferaToolStripMenuItem_Click);
             // 
+            // lilyToolStripMenuItem
+            // 
+            this.lilyToolStripMenuItem.Name = "lilyToolStripMenuItem";
+            this.lilyToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.lilyToolStripMenuItem.Text = "Lily";
+            this.lilyToolStripMenuItem.Click += new System.EventHandler(this.lilyToolStripMenuItem_Click);
+            // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(12, 42);
+            this.btnReset.Location = new System.Drawing.Point(9, 34);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(2);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(92, 37);
+            this.btnReset.Size = new System.Drawing.Size(69, 30);
             this.btnReset.TabIndex = 1;
             this.btnReset.Text = "Reiniciar";
             this.btnReset.UseVisualStyleBackColor = true;
@@ -103,9 +114,10 @@
             // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(138, 42);
+            this.btnPlay.Location = new System.Drawing.Point(104, 34);
+            this.btnPlay.Margin = new System.Windows.Forms.Padding(2);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(92, 37);
+            this.btnPlay.Size = new System.Drawing.Size(69, 30);
             this.btnPlay.TabIndex = 2;
             this.btnPlay.Text = "Play";
             this.btnPlay.UseVisualStyleBackColor = true;
@@ -113,9 +125,10 @@
             // 
             // btnPause
             // 
-            this.btnPause.Location = new System.Drawing.Point(269, 42);
+            this.btnPause.Location = new System.Drawing.Point(202, 34);
+            this.btnPause.Margin = new System.Windows.Forms.Padding(2);
             this.btnPause.Name = "btnPause";
-            this.btnPause.Size = new System.Drawing.Size(92, 37);
+            this.btnPause.Size = new System.Drawing.Size(69, 30);
             this.btnPause.TabIndex = 3;
             this.btnPause.Text = "Pause";
             this.btnPause.UseVisualStyleBackColor = true;
@@ -124,9 +137,10 @@
             // picCanvas
             // 
             this.picCanvas.BackColor = System.Drawing.SystemColors.ButtonHighlight;
-            this.picCanvas.Location = new System.Drawing.Point(13, 97);
+            this.picCanvas.Location = new System.Drawing.Point(10, 79);
+            this.picCanvas.Margin = new System.Windows.Forms.Padding(2);
             this.picCanvas.Name = "picCanvas";
-            this.picCanvas.Size = new System.Drawing.Size(1042, 475);
+            this.picCanvas.Size = new System.Drawing.Size(782, 386);
             this.picCanvas.TabIndex = 4;
             this.picCanvas.TabStop = false;
             this.picCanvas.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picCanvas_MouseDown);
@@ -136,9 +150,10 @@
             // 
             // btnGuizmos
             // 
-            this.btnGuizmos.Location = new System.Drawing.Point(391, 42);
+            this.btnGuizmos.Location = new System.Drawing.Point(293, 34);
+            this.btnGuizmos.Margin = new System.Windows.Forms.Padding(2);
             this.btnGuizmos.Name = "btnGuizmos";
-            this.btnGuizmos.Size = new System.Drawing.Size(92, 37);
+            this.btnGuizmos.Size = new System.Drawing.Size(69, 30);
             this.btnGuizmos.TabIndex = 5;
             this.btnGuizmos.Text = "Guizmos";
             this.btnGuizmos.UseVisualStyleBackColor = true;
@@ -147,9 +162,10 @@
             // radioX
             // 
             this.radioX.AutoSize = true;
-            this.radioX.Location = new System.Drawing.Point(580, 59);
+            this.radioX.Location = new System.Drawing.Point(435, 48);
+            this.radioX.Margin = new System.Windows.Forms.Padding(2);
             this.radioX.Name = "radioX";
-            this.radioX.Size = new System.Drawing.Size(72, 20);
+            this.radioX.Size = new System.Drawing.Size(61, 17);
             this.radioX.TabIndex = 6;
             this.radioX.TabStop = true;
             this.radioX.Text = "Rotar X";
@@ -158,9 +174,10 @@
             // radioY
             // 
             this.radioY.AutoSize = true;
-            this.radioY.Location = new System.Drawing.Point(682, 59);
+            this.radioY.Location = new System.Drawing.Point(512, 48);
+            this.radioY.Margin = new System.Windows.Forms.Padding(2);
             this.radioY.Name = "radioY";
-            this.radioY.Size = new System.Drawing.Size(73, 20);
+            this.radioY.Size = new System.Drawing.Size(61, 17);
             this.radioY.TabIndex = 7;
             this.radioY.TabStop = true;
             this.radioY.Text = "Rotar Y";
@@ -169,9 +186,10 @@
             // radioZ
             // 
             this.radioZ.AutoSize = true;
-            this.radioZ.Location = new System.Drawing.Point(786, 59);
+            this.radioZ.Location = new System.Drawing.Point(590, 48);
+            this.radioZ.Margin = new System.Windows.Forms.Padding(2);
             this.radioZ.Name = "radioZ";
-            this.radioZ.Size = new System.Drawing.Size(72, 20);
+            this.radioZ.Size = new System.Drawing.Size(61, 17);
             this.radioZ.TabIndex = 8;
             this.radioZ.TabStop = true;
             this.radioZ.Text = "Rotar Z";
@@ -179,9 +197,9 @@
             // 
             // FrmHome
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 584);
+            this.ClientSize = new System.Drawing.Size(802, 474);
             this.Controls.Add(this.radioZ);
             this.Controls.Add(this.radioX);
             this.Controls.Add(this.radioY);
@@ -193,6 +211,7 @@
             this.Controls.Add(this.menuStrip1);
             this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmHome";
             this.Text = "Renderizador 3D";
             this.Load += new System.EventHandler(this.FrmHome_Load);
@@ -222,5 +241,6 @@
         private System.Windows.Forms.RadioButton radioX;
         private System.Windows.Forms.RadioButton radioY;
         private System.Windows.Forms.RadioButton radioZ;
+        private System.Windows.Forms.ToolStripMenuItem lilyToolStripMenuItem;
     }
 }
